@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -69,23 +71,35 @@
     </form>
 
     <section id="error-btns">
-      <button>Console Log</button>
-      <button>Console Error</button>
-      <button>Console Count</button>
-      <button>Console Warn</button>
-      <button>Console Assert</button>
-      <button>Console Clear</button>
-      <button>Console Dir</button>
-      <button>Console dirxml</button>
-      <button>Console Group Start</button>
-      <button>Console Group End</button>
-      <button>Console Table</button>
-      <button>Start Timer</button>
-      <button>End Timer</button>
-      <button>Console Trace</button>
-      <button>Trigger a Global Error</button>
+      <button onclick="console.log('Console log button clicked')">Console Log</button>
+      <button onclick="console.error('Console error button clicked')">Console Error</button>
+      <button onclick="console.count('Console count button clicked')">Console Count</button>
+      <button onclick="console.warn('Console warn button clicked')">Console Warn</button>
+      <button onclick="console.assert(1== 5)">Console Assert</button>
+      <button onclick="console.clear('Console clear button clicked')">Console Clear</button>
+      <button onclick="console.dir(this)">Console Dir</button>
+      <button onclick="console.dirxml(this)">Console DirXML</button>
+      <button onclick="console.group('Creating Console Group')">Console Group Start</button>
+      <button onclick="console.groupCollapsed('Ending Console Group')">Console Group End</button>
+      <button onclick="console.table([
+  { category: 'Log', user: 'Dennis', number: '1' },
+  { category: 'Error', user: 'Dennis', number: '2' },
+  { category: 'Count', user: 'Dennis', number: '3' }
+])">Console Table</button>
+       <button onclick="startTimer()">Start Timer</button> 
+       <button onclick="endTimer()">End Timer</button>
+      <button onclick="console.trace(this)">Console Trace</button>
+      <button onclick="globalError()">Trigger a Global Error</button> 
     </section>
   </main>
+
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+  <script>
+    window.TrackJS && TrackJS.install({ 
+      token: "da9ec85e8afa40429ff30c0eb92849d7"
+      // for more configuration options, see https://docs.trackjs.com
+    });
+  </script>
 
   <script>
     let form = document.querySelector('form');
@@ -102,6 +116,65 @@
 
     // Start your code here
     // You may move this JS to another file if you wish
+
+    // Part 2 in buttons above
+
+    // Part 3:
+
+    // start, end are to be ran as pairs, this flags if unresolved pair
+    resolvedFlag = true;
+
+    //add unresolved to startTimer execution
+    function startTimer(){
+      console.time();
+      resolvedFlag = false;
+  }
+
+    // add resolved to end if ran, throw error else, finally+
+    function endTimer(){
+      try {
+        if (!resolvedFlag) {
+          console.timeEnd();
+          resolvedFlag = true;
+        } else {
+          throw new Error("Timer start error: try again");
+        }
+      } catch (error) {
+        console.error(error.message);
+      } finally {
+        console.log("Try catch complete");
+    }
+  }
+
+  // Part 4:
+  
+  class BrowserError extends Error {
+    constructor(message) {
+      super(message); // (1)
+      this.name = "BrowserError"; // (2)
+    }
+  }
+
+  function test() {
+    throw new BrowserError("Not using Bing?");
+  }
+
+  try {
+    test();
+  } catch(err) {
+    alert(err.message); // Whoops!
+  }
+
+  // Part 5:
+  function globalError() {
+    window.onerror = (errorAlert) => {
+      console.log("Boom!", errorAlert);
+    };
+    boom
+  }
+
+
+  
   </script>
 </body>
 
